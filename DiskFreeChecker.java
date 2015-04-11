@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.management.ManagementFactory;
 import java.math.BigDecimal;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -97,20 +98,30 @@ public class DiskFreeChecker {
    * @return Connection
    */
   private Connection getConnection() {
-    try {
-      // load our .properties file
-      dbp=getProperties();
-      // open the database connection if it isn't already open
-      if (con == null) {
-        // load the driver
+    // load our .properties file
+    dbp=getProperties();
+    // open the database connection if it isn't already open
+    if (con == null) {
+      // load the driver
+      try {
         Class.forName(dbp.getProperty("driver.class"));
-        // open the connection
-        con = DriverManager.getConnection(dbp.getProperty("connection.url"),
-            dbp);
+      } catch (ClassNotFoundException cnfe) {
+        System.err.printf("Could not find JDBC Driver: %s\n",dbp.getProperty("driver.class"));
+        System.err.printf(cnfe.getMessage());
+        System.err.printf("Make sure to set the classpath with the -cp option or CLASSPATH environment variable\n");
+        System.exit(1);
       }
-    } catch (Exception e) {
-      e.printStackTrace(System.err);
-      System.exit(1);
+      // open the connection
+      try {
+        con = DriverManager.getConnection(
+            dbp.getProperty("connection.url"), dbp);
+      } catch (SQLException sqle) {
+        System.err.printf("Database connection: %s\n",
+            dbp.getProperty("connection.url"));
+        System.err.printf("%s\n",sqle.getMessage());
+        System.err.printf("Check the connection URL,user and password\n");
+        System.exit(1);
+      }
     }
     // check for an error and exit if necessary
     try {
@@ -506,6 +517,7 @@ public class DiskFreeChecker {
    * Show usage
    */
   void usage() {
+    
     System.out
         .print("Usage: java DiskFreeChecker {service | report {desired hours} | cleanup}\n\n");
   }

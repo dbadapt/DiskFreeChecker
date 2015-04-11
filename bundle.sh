@@ -18,8 +18,8 @@ fi
 mkdir .build
 cd .build
 
-# bundle the app with along with the JDBC driver
-JDBC_JAR=$(find .. -type f -name 'mysql-connector*.jar')
+# bundle the app with along with the JDBC driver in a new .jar file
+JDBC_JAR=$(find $BASEDIR /usr/share/java -type f -name 'mysql-connector*.jar' | head -n1)
 jar xf ${JDBC_JAR}
 mv ../DiskFreeChecker*.class .
 jar cfm ../DiskFreeChecker.jar ../Manifest.txt *
