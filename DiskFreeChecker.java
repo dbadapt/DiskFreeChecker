@@ -27,7 +27,7 @@ import java.util.Properties;
  * This class implements disk free volume checker service and reporter in a
  * single java source file.
  * 
- * Dependencies: - JRE 1.5 or better, MySQL JDBC Driver 5, POSIX df utility on system
+ * Dependencies: - JRE 5 or better, MySQL JDBC Driver 5, POSIX df utility on system
  * 
  * @author david.bennett@percona.com
  * 
@@ -511,6 +511,8 @@ public class DiskFreeChecker {
       System.out.println("Cleaned up "+updateCount+" old entries.");
     else
       System.out.println("No old entries to clean up.");
+    
+    pst.close();
   }
 
   /**

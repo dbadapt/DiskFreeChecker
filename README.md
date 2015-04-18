@@ -20,7 +20,7 @@ The DiskFreeChecker utility has a few other features that make it unique.
 
 ## Dependencies
 
-- JDK 1.5 or greater to compile
+- JDK 5 or greater to compile
 - A MySQL JDBC driver compatible with Connector/J
 - Access to a MySQL server to store data
 - The POSIX **df** utility on the local system
